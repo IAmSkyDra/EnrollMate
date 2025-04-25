@@ -5,12 +5,18 @@ from fastapi.openapi.utils import get_openapi
 from starlette.middleware.cors import CORSMiddleware
 from haystack import __version__ as haystack_version
 
-from controller.errors.http_error import http_error_handler
 from pipelines import setup_pipelines
 
 app = None
 pipelines = None
 
+from fastapi import HTTPException
+from starlette.requests import Request
+from starlette.responses import JSONResponse
+
+
+async def http_error_handler(_: Request, exc: HTTPException) -> JSONResponse:
+    return JSONResponse({"errors": [exc.detail]}, status_code=exc.status_code)
 
 def get_app() -> FastAPI:
     """
