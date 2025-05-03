@@ -21,6 +21,11 @@ Chạy lệnh sau để thiết lập cơ sở dữ liệu qdrant phục vụ ch
 ```
 docker run -d -p 6333:6333 qdrant/qdrant:v1.7.4
 ```
+### Cài đặt Mongodb bằng Docker 
+Chạy lệnh sau để thiết lập cơ sở dữ liệu Mongodb để lưu lịch sử trò chuyện:
+```
+docker run -d --name mongodb -p 27017:27017 mongo:latest
+```
 ## Hướng dẫn thiết lập nhanh
 - Chạy file setup.sh đối với Linux hoặc setup.bat đối với Windows để cài đặt các gói cần thiết.
 - Chạy file run.sh đối với Linux hoặc run.bat đối với Windows để khởi động ứng dụng.
@@ -88,3 +93,39 @@ Tiến hành chạy lệnh sau để nạp dữ liệu sẵn sàng cho Chatbot.
 ```
 python main.py --reindex
 ```
+
+## Cấu hình
+### Cấu hình frontend
+Chỉnh sửa file `.env.local` để cấu hình:
+- Chỉnh sửa thông tin kết nối database
+```
+MONGODB_DB_NAME=chat_ui
+MONGODB_URL=mongodb://localhost:27017/mydb
+```
+- Chỉnh sửa thông tin kết nối với server backend:
+```
+      "endpoints": [{
+        "type" : "tgi",
+        "url": "http://127.0.0.1:8000/generate_stream"
+      }]
+```
+- Chỉnh sửa tên trường đại học/sản phẩm:
+```
+PUBLIC_APP_NAME=HCMUT Chatbot # name used as title throughout the app
+```
+### Cấu hình backend
+Chỉnh sửa file `envs.py` để cấu hình:
+
+- Chỉnh sửa link kết nối database Qdrant:
+``` 
+QDRANTDB_URL = "http://localhost:6333"
+```
+- Chỉnh sửa mô hình embedding tiếng Việt:
+```
+EMBEDDING_MODEL = "bkai-foundation-models/vietnamese-bi-encoder"
+```
+- Chỉnh sửa địa chỉ TGI chạy mô hình ngôn ngữ lớn:
+```
+TGI_URL = "http://localhost:10025"
+```
+
