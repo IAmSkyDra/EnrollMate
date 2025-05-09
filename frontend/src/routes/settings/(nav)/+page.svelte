@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from "svelte";
 	import Modal from "$lib/components/Modal.svelte";
 	import CarbonClose from "~icons/carbon/close";
 	import CarbonTrashCan from "~icons/carbon/trash-can";
@@ -10,15 +11,28 @@
 	import { useSettingsStore } from "$lib/stores/settings";
 	import Switch from "$lib/components/Switch.svelte";
 	import { env as envPublic } from "$env/dynamic/public";
+	import i18n from "$lib/i18n";
+	import { getLanguages } from "$lib/i18n";
 
-	let isConfirmingDeletion = false;
+	let isConfirmingDeletion = $state(false);
+	let languages = $state({});
 
 	let settings = useSettingsStore();
+
+	onMount(async () => {
+		languages = await getLanguages();
+	});
+
+	function handleLanguageChange(event: Event) {
+		const select = event.target as HTMLSelectElement;
+		$i18n.changeLanguage(select.value);
+		localStorage.setItem('locale', select.value);
+	}
 </script>
 
 <div class="flex w-full flex-col gap-5">
 	<div class="flex flex-col items-start justify-between text-xl font-semibold text-gray-800">
-		<h2>Application Settings</h2>
+		<h2>{$i18n.t('settings.title')}</h2>
 		{#if !!envPublic.PUBLIC_COMMIT_SHA}
 			<a
 				href={`https://github.com/huggingface/chat-ui/commit/${envPublic.PUBLIC_COMMIT_SHA}`}
@@ -26,56 +40,68 @@
 				rel="noreferrer"
 				class="text-sm font-light text-gray-500"
 			>
-				Latest deployment <span class="gap-2 font-mono"
+				{$i18n.t('settings.latest_deployment')} <span class="gap-2 font-mono"
 					>{envPublic.PUBLIC_COMMIT_SHA.slice(0, 7)}</span
 				>
 			</a>
 		{/if}
 	</div>
 	<div class="flex h-full max-w-2xl flex-col gap-2 max-sm:pt-0">
+		<!-- Language Selection -->
+		<div class="mb-6">
+			<label class="flex flex-col gap-2">
+				<span class="font-semibold">{$i18n.t('settings.language')}</span>
+				<p class="text-sm text-gray-500">{$i18n.t('settings.language_description')}</p>
+				<select
+					class="w-full max-w-xs rounded-lg border border-gray-300 px-4 py-2"
+					onchange={handleLanguageChange}
+					value={$i18n.language}
+				>
+					{#each Object.entries(languages) as [code, name]}
+						<option value={code}>{name}</option>
+					{/each}
+				</select>
+			</label>
+		</div>
+
 		{#if envPublic.PUBLIC_APP_DATA_SHARING === "1"}
-			<!-- svelte-ignore a11y-label-has-associated-control -->
 			<label class="flex items-center">
 				<Switch
 					name="shareConversationsWithModelAuthors"
 					bind:checked={$settings.shareConversationsWithModelAuthors}
 				/>
 				<div class="inline cursor-pointer select-none items-center gap-2 pl-2">
-					Share conversations with model authors
+					{$i18n.t('settings.share_conversations')}
 				</div>
 			</label>
 
 			<p class="text-sm text-gray-500">
-				Sharing your data will help improve the training data and make open models better over time.
+				{$i18n.t('settings.share_conversations_description')}
 			</p>
 		{/if}
-		<!-- svelte-ignore a11y-label-has-associated-control -->
 		<label class="mt-6 flex items-center">
 			<Switch name="hideEmojiOnSidebar" bind:checked={$settings.hideEmojiOnSidebar} />
 			<div class="inline cursor-pointer select-none items-center gap-2 pl-2 font-semibold">
-				Hide emoticons in conversation topics
+				{$i18n.t('settings.hide_emoji')}
 				<p class="text-sm font-normal text-gray-500">
-					Emoticons are shown in the sidebar by default, enable this to hide them.
+					{$i18n.t('settings.hide_emoji_description')}
 				</p>
 			</div>
 		</label>
 
-		<!-- svelte-ignore a11y-label-has-associated-control -->
 		<label class="mt-6 flex items-center">
 			<Switch name="disableStream" bind:checked={$settings.disableStream} />
 			<div class="inline cursor-pointer select-none items-center gap-2 pl-2 font-semibold">
-				Disable streaming tokens
+				{$i18n.t('settings.disable_stream')}
 			</div>
 		</label>
 
-		<!-- svelte-ignore a11y-label-has-associated-control -->
 		<label class="mt-6 flex items-center">
 			<Switch name="directPaste" bind:checked={$settings.directPaste} />
 			<div class="inline cursor-pointer select-none items-center gap-2 pl-2 font-semibold">
-				Paste text directly into chat
+				{$i18n.t('settings.direct_paste')}
 				<p class="text-sm font-normal text-gray-500">
-					By default, when pasting long text into the chat, we treat it as a plaintext file. Enable
-					this to paste directly into the chat instead.
+					{$i18n.t('settings.direct_paste_description')}
 				</p>
 			</div>
 		</label>
@@ -86,42 +112,17 @@
 				target="_blank"
 				rel="noreferrer"
 				class="flex items-center underline decoration-gray-300 underline-offset-2 hover:decoration-gray-700"
-				><CarbonArrowUpRight class="mr-1.5 shrink-0 text-sm " /> Share your feedback on HuggingChat</a
+				><CarbonArrowUpRight class="mr-1.5 shrink-0 text-sm " /> {$i18n.t('settings.share_feedback')}</a
 			>
 			<button
-				on:click|preventDefault={() => (isConfirmingDeletion = true)}
+				onclick={(e) => {
+					e.preventDefault();
+					isConfirmingDeletion = true;
+				}}
 				type="submit"
 				class="flex items-center underline decoration-gray-300 underline-offset-2 hover:decoration-gray-700"
-				><CarbonTrashCan class="mr-2 inline text-sm text-red-500" />Delete all conversations</button
+				><CarbonTrashCan class="mr-2 inline text-sm text-red-500" />{$i18n.t('settings.delete_all')}</button
 			>
-			<h3 class="text-lg font-semibold">Dữ liệu CBCNV</h3>
-
-			<a
-				href="#"
-				class="flex items-center justify-center rounded-lg border border-gray-300 bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-md hover:from-blue-600 hover:to-indigo-700 hover:shadow-lg transition-all duration-300 ease-in-out dark:border-gray-600 dark:from-gray-800 dark:to-gray-900 dark:hover:from-gray-900 dark:hover:to-black sm:text-base"
-			>
-				Tải lại dữ liệu CBNV
-			</a>
-			<div class="inline items-center gap-2 pl-2">
-				Các bộ môn/phòng thí nghiệm trong cơ sở dữ liệu:
-				<table class="border-collapse border border-gray-300 w-full">
-					<tbody>
-					<tr>
-						<td class="border border-gray-300 px-4 py-2">Bộ môn Hệ thống & Mạng máy tính</td>
-					</tr>
-					<tr>
-						<td class="border border-gray-300 px-4 py-2">Bộ môn Hệ thống Thông tin</td>
-					</tr>
-					<tr>
-						<td class="border border-gray-300 px-4 py-2">Bộ môn Công nghệ Phần mềm</td>
-					</tr>
-					<tr>
-						<td class="border border-gray-300 px-4 py-2">Bộ môn Kỹ thuật Máy tính</td>
-					</tr>
-					</tbody>
-				</table>
-			</div>
-
 		</div>
 	</div>
 
@@ -136,23 +137,26 @@
 				class="flex w-full flex-col gap-5 p-6"
 			>
 				<div class="flex items-start justify-between text-xl font-semibold text-gray-800">
-					<h2>Are you sure?</h2>
+					<h2>{$i18n.t('settings.delete_confirm_title')}</h2>
 					<button
 						type="button"
 						class="group"
-						on:click|stopPropagation={() => (isConfirmingDeletion = false)}
+						onclick={(e) => {
+							e.stopPropagation();
+							isConfirmingDeletion = false;
+						}}
 					>
 						<CarbonClose class="text-gray-900 group-hover:text-gray-500" />
 					</button>
 				</div>
 				<p class="text-gray-800">
-					This action will delete all your conversations. This cannot be undone.
+					{$i18n.t('settings.delete_confirm_description')}
 				</p>
 				<button
 					type="submit"
 					class="mt-2 rounded-full bg-red-700 px-5 py-2 text-lg font-semibold text-gray-100 ring-gray-400 ring-offset-1 transition-all hover:ring focus-visible:outline-none focus-visible:ring"
 				>
-					Confirm deletion
+					{$i18n.t('settings.delete_confirm_button')}
 				</button>
 			</form>
 		</Modal>

@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import { base } from "$app/paths";
 	import { env as envPublic } from "$env/dynamic/public";
+	import i18n from "$lib/i18n";
 	import type { BackendModel } from "$lib/server/models";
 	import { useSettingsStore } from "$lib/stores/settings";
 	import CopyToClipBoardBtn from "$lib/components/CopyToClipBoardBtn.svelte";
@@ -15,25 +16,28 @@
 
 	const settings = useSettingsStore();
 
-	$: if ($settings.customPrompts[$page.params.model] === undefined) {
-		$settings.customPrompts = {
-			...$settings.customPrompts,
-			[$page.params.model]:
-				$page.data.models.find((el: BackendModel) => el.id === $page.params.model)?.preprompt || "",
-		};
-	}
+	$effect(() => {
+		if ($settings.customPrompts[page.params.model] === undefined) {
+			$settings.customPrompts = {
+				...$settings.customPrompts,
+				[page.params.model]:
+					page.data.models.find((el: BackendModel) => el.id === page.params.model)?.preprompt || "",
+			};
+		}
+	});
 
-	$: hasCustomPreprompt =
-		$settings.customPrompts[$page.params.model] !==
-		$page.data.models.find((el: BackendModel) => el.id === $page.params.model)?.preprompt;
+	let hasCustomPreprompt = $derived(
+		$settings.customPrompts[page.params.model] !==
+			page.data.models.find((el: BackendModel) => el.id === page.params.model)?.preprompt
+	);
 
-	$: model = $page.data.models.find((el: BackendModel) => el.id === $page.params.model);
+	let model = $derived(page.data.models.find((el: BackendModel) => el.id === page.params.model));
 </script>
 
 <div class="flex flex-col items-start">
 	<div class="mb-5 flex flex-col gap-1.5">
 		<h2 class="text-lg font-semibold md:text-xl">
-			{$page.params.model}
+			{page.params.model}
 		</h2>
 
 		{#if model.description}
@@ -52,7 +56,7 @@
 				class="flex items-center truncate underline underline-offset-2"
 			>
 				<CarbonArrowUpRight class="mr-1.5 shrink-0 text-xs " />
-				Model page
+				{$i18n.t('settings.model.page')}
 			</a>
 		{/if}
 
@@ -64,7 +68,7 @@
 				class="flex items-center truncate underline underline-offset-2"
 			>
 				<CarbonArrowUpRight class="mr-1.5 shrink-0 text-xs " />
-				Dataset page
+				{$i18n.t('settings.model.dataset')}
 			</a>
 		{/if}
 
@@ -76,7 +80,7 @@
 				rel="noreferrer"
 			>
 				<CarbonArrowUpRight class="mr-1.5 shrink-0 text-xs " />
-				Model website
+				{$i18n.t('settings.model.website')}
 			</a>
 		{/if}
 
@@ -88,16 +92,16 @@
 				class="flex items-center truncate underline underline-offset-2"
 			>
 				<CarbonCode class="mr-1.5 shrink-0 text-xs " />
-				API Playground
+				{$i18n.t('settings.model.api_playground')}
 			</a>
 		{/if}
 
 		<CopyToClipBoardBtn
-			value="{envPublic.PUBLIC_ORIGIN || $page.url.origin}{base}/models/{model.id}"
+			value="{envPublic.PUBLIC_ORIGIN || page.url.origin}{base}/models/{model.id}"
 			classNames="!border-none !shadow-none !py-0 !px-1 !rounded-md"
 		>
 			<div class="flex items-center gap-1.5 hover:underline">
-				<CarbonLink />Copy direct link to model
+				<CarbonLink />{$i18n.t('settings.model.copy_link')}
 			</div>
 		</CopyToClipBoardBtn>
 	</div>
@@ -105,40 +109,43 @@
 	<button
 		class="my-2 flex w-fit items-center rounded-full bg-black px-3 py-1 text-base !text-white"
 		name="Activate model"
-		on:click|stopPropagation={() => {
+		onclick={(e) => {
+			e.stopPropagation();
 			settings.instantSet({
-				activeModel: $page.params.model,
+				activeModel: page.params.model,
 			});
 			goto(`${base}/`);
 		}}
 	>
 		<CarbonChat class="mr-1.5 text-sm" />
-		New chat
+		{$i18n.t('settings.model.new_chat')}
 	</button>
 
 	<div class="relative flex w-full flex-col gap-2">
 		<div class="flex w-full flex-row content-between">
-			<h3 class="mb-1.5 text-lg font-semibold text-gray-800">System Prompt</h3>
+			<h3 class="mb-1.5 text-lg font-semibold text-gray-800">{$i18n.t('settings.model.system_prompt')}</h3>
 			{#if hasCustomPreprompt}
 				<button
 					class="ml-auto underline decoration-gray-300 hover:decoration-gray-700"
-					on:click|stopPropagation={() =>
-						($settings.customPrompts[$page.params.model] = model.preprompt)}
+					onclick={(e) => {
+						e.stopPropagation();
+						$settings.customPrompts[page.params.model] = model.preprompt;
+					}}
 				>
-					Reset
+					{$i18n.t('settings.model.reset')}
 				</button>
 			{/if}
 		</div>
 		<textarea
-			aria-label="Custom system prompt"
+			aria-label={$i18n.t('settings.model.custom_prompt_aria')}
 			rows="10"
 			class="w-full resize-none rounded-md border-2 bg-gray-100 p-2"
-			bind:value={$settings.customPrompts[$page.params.model]}
-		/>
-		{#if model.tokenizer && $settings.customPrompts[$page.params.model]}
+			bind:value={$settings.customPrompts[page.params.model]}
+		></textarea>
+		{#if model.tokenizer && $settings.customPrompts[page.params.model]}
 			<TokensCounter
 				classNames="absolute bottom-2 right-2"
-				prompt={$settings.customPrompts[$page.params.model]}
+				prompt={$settings.customPrompts[page.params.model]}
 				modelTokenizer={model.tokenizer}
 				truncate={model?.parameters?.truncate}
 			/>

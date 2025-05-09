@@ -8,8 +8,13 @@
 	import ModelCardMetadata from "../ModelCardMetadata.svelte";
 	import { base } from "$app/paths";
 	import JSON5 from "json5";
+	import i18n from "$lib/i18n";
 
-	export let currentModel: Model;
+	interface Props {
+		currentModel: Model;
+	}
+
+	let { currentModel }: Props = $props();
 
 	const announcementBanners = envPublic.PUBLIC_ANNOUNCEMENT_BANNERS
 		? JSON5.parse(envPublic.PUBLIC_ANNOUNCEMENT_BANNERS)
@@ -31,8 +36,7 @@
 				</div>
 			</div>
 			<p class="text-base text-gray-600 dark:text-gray-400">
-				{envPublic.PUBLIC_APP_DESCRIPTION ||
-					"Making the community's best AI chat models available to everyone."}
+				{envPublic.PUBLIC_APP_DESCRIPTION || $i18n.t('chat.introduction.default_description')}
 			</p>
 		</div>
 	</div>
@@ -49,7 +53,7 @@
 		<div class="overflow-hidden rounded-xl border dark:border-gray-800">
 			<div class="flex p-3">
 				<div>
-					<div class="text-sm text-gray-600 dark:text-gray-400">Current Model</div>
+					<div class="text-sm text-gray-600 dark:text-gray-400">{$i18n.t('chat.introduction.current_model')}</div>
 					<div class="flex items-center gap-1.5 font-semibold max-sm:text-smd">
 						{#if currentModel.logoUrl}
 							<img
@@ -58,7 +62,9 @@
 								alt=""
 							/>
 						{:else}
-							<div class="size-4 rounded border border-transparent bg-gray-300 dark:bg-gray-800" />
+							<div
+								class="size-4 rounded border border-transparent bg-gray-300 dark:bg-gray-800"
+							></div>
 						{/if}
 						{currentModel.displayName}
 					</div>
@@ -75,18 +81,18 @@
 	</div>
 	{#if currentModel.promptExamples}
 		<div class="lg:col-span-3 lg:mt-6">
-			<p class="mb-3 text-gray-600 dark:text-gray-300">Examples</p>
+			<p class="mb-3 text-gray-600 dark:text-gray-300">{$i18n.t('chat.introduction.examples')}</p>
 			<div class="grid gap-3 lg:grid-cols-3 lg:gap-5">
 				{#each currentModel.promptExamples as example}
 					<button
 						type="button"
 						class="rounded-xl border bg-gray-50 p-3 text-gray-600 hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 max-xl:text-sm xl:p-3.5"
-						on:click={() => dispatch("message", example.prompt)}
+						onclick={() => dispatch("message", example.prompt)}
 					>
 						{example.title}
 					</button>
 				{/each}
 			</div>
 		</div>{/if}
-	<div class="h-40 sm:h-24" />
+	<div class="h-40 sm:h-24"></div>
 </div>

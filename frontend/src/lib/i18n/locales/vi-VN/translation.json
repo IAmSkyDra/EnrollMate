@@ -1,0 +1,123 @@
+{
+	"settings": {
+		"title": "Cài đặt ứng dụng",
+		"latest_deployment": "Triển khai mới nhất",
+		"language": "Ngôn ngữ",
+		"language_description": "Chọn ngôn ngữ ưa thích của bạn",
+		"share_conversations": "Chia sẻ cuộc trò chuyện với tác giả mô hình",
+		"share_conversations_description": "Chia sẻ dữ liệu của bạn sẽ giúp cải thiện dữ liệu huấn luyện và làm cho các mô hình mở tốt hơn theo thời gian.",
+		"hide_emoji": "Ẩn biểu tượng cảm xúc trong chủ đề hội thoại",
+		"hide_emoji_description": "Biểu tượng cảm xúc được hiển thị trong thanh bên theo mặc định, bật tính năng này để ẩn chúng.",
+		"disable_stream": "Tắt luồng token",
+		"direct_paste": "Dán văn bản trực tiếp vào cuộc trò chuyện",
+		"direct_paste_description": "Theo mặc định, khi dán văn bản dài vào cuộc trò chuyện, chúng tôi xử lý nó như một tệp văn bản thuần túy. Bật tính năng này để dán trực tiếp vào cuộc trò chuyện.",
+		"share_feedback": "Chia sẻ phản hồi của bạn về HuggingChat",
+		"delete_all": "Xóa tất cả cuộc trò chuyện",
+		"delete_confirm_title": "Bạn có chắc chắn không?",
+		"delete_confirm_description": "Hành động này sẽ xóa tất cả cuộc trò chuyện của bạn. Điều này không thể hoàn tác.",
+		"delete_confirm_button": "Xác nhận xóa",
+		"close": "Đóng cài đặt",
+		"models": "Mô hình",
+		"active": "Đang hoạt động",
+		"assistants": "Trợ lý",
+		"my_assistants": "Trợ lý của tôi",
+		"create_assistant": "Tạo trợ lý mới",
+		"other_assistants": "Trợ lý khác",
+		"browse_assistants": "Duyệt trợ lý",
+		"app_settings": "Cài đặt ứng dụng",
+		"model": {
+			"page": "Trang mô hình",
+			"dataset": "Trang dữ liệu",
+			"website": "Trang web mô hình",
+			"api_playground": "Sân chơi API",
+			"copy_link": "Sao chép liên kết trực tiếp đến mô hình",
+			"new_chat": "Cuộc trò chuyện mới",
+			"system_prompt": "Lời nhắc hệ thống",
+			"reset": "Đặt lại",
+			"custom_prompt_aria": "Lời nhắc hệ thống tùy chỉnh"
+		}
+	},
+	"button": {
+		"continue": "Tiếp tục",
+		"delete": "Xóa",
+		"upload": "Tải lên",
+		"cancel": "Hủy",
+		"save": "Lưu",
+		"create": "Tạo mới",
+		"sign_out": "Đăng xuất",
+		"new_chat": "Trò chuyện mới"
+	},
+	"menu": {
+		"tools": "Công cụ",
+		"available_tools": "Công cụ có sẵn",
+		"theme": "Giao diện",
+		"models": "Mô hình",
+		"assistants": "Trợ lý",
+		"settings": "Cài đặt",
+		"about_privacy": "Giới thiệu & Quyền riêng tư",
+		"time_range": {
+			"today": "Hôm nay",
+			"this_week": "Tuần này",
+			"this_month": "Tháng này",
+			"older": "Cũ hơn"
+		}
+	},
+	"announcement": {
+		"new": "Mới"
+	},
+	"assistant": {
+		"edit_title": "Chỉnh sửa Trợ lý: {{name}}",
+		"edit_description": "Việc sửa đổi trợ lý hiện có sẽ áp dụng các thay đổi cho tất cả người dùng.",
+		"create_title": "Tạo trợ lý mới",
+		"create_description": "Tạo và chia sẻ Trợ lý AI của riêng bạn. Tất cả trợ lý đều",
+		"public_badge": "công khai",
+		"avatar": "Ảnh đại diện",
+		"name": "Tên",
+		"name_placeholder": "Tên Trợ lý",
+		"description": "Mô tả",
+		"description_placeholder": "Nó biết mọi thứ về python",
+		"model": "Mô hình",
+		"start_messages": "Tin nhắn bắt đầu của người dùng",
+		"start_message_placeholder": "Tin nhắn bắt đầu {{number}}",
+		"tools_section": "Công cụ",
+		"tools_experimental": "Thử nghiệm",
+		"tools_description": "Chọn tối đa 3 công cụ cộng đồng sẽ được sử dụng với trợ lý này.",
+		"internet_access": "Truy cập internet",
+		"give_feedback": "Gửi phản hồi",
+		"internet_default": "Mặc định",
+		"internet_default_description": "Trợ lý sẽ không sử dụng internet để tìm kiếm thông tin và sẽ phản hồi nhanh hơn. Được khuyến nghị cho hầu hết các Trợ lý.",
+		"web_search": "Tìm kiếm web",
+		"web_search_description": "Trợ lý sẽ thực hiện tìm kiếm web cho mỗi yêu cầu của người dùng để tìm thông tin.",
+		"domains_search": "Tìm kiếm theo tên miền",
+		"domains_placeholder": "wikipedia.org,bbc.com",
+		"specific_links": "Liên kết cụ thể",
+		"specific_links_description": "Chỉ định tối đa 10 URL trực tiếp mà Trợ lý sẽ truy cập. Chỉ HTML & Văn bản thuần, phân cách bằng dấu phẩy",
+		"specific_links_placeholder": "https://raw.githubusercontent.com/huggingface/chat-ui/main/README.md",
+		"instructions": "Hướng dẫn (Lời nhắc Hệ thống)",
+		"instructions_placeholder": "Bạn sẽ đóng vai trò là...",
+		"dynamic_prompt": "Lời nhắc Động",
+		"dynamic_prompt_description": "Cho phép sử dụng biến mẫu {{get=https://example.com/path}} để chèn nội dung động vào lời nhắc của bạn bằng cách thực hiện các yêu cầu GET đến các URL được chỉ định trong mỗi lần suy luận. Bạn cũng có thể gửi tin nhắn của người dùng như nội dung của yêu cầu POST, sử dụng {{post=https://example.com/path}}. Sử dụng {{today}} để bao gồm ngày hiện tại.",
+		"template_variables": "biến mẫu",
+		"template_variables_plural": "biến mẫu",
+		"template_variables_description": "Sẽ thực hiện yêu cầu GET hoặc POST và chèn phản hồi vào lời nhắc. Hoạt động tốt hơn với văn bản thuần, csv hoặc nội dung json."
+	},
+	"chat": {
+		"ask_anything": "Hỏi bất cứ điều gì",
+		"read_only": "Cuộc trò chuyện này chỉ được đọc.",
+		"error_message": "Xin lỗi, đã xảy ra lỗi. Vui lòng thử lại.",
+		"share_conversation": "Chia sẻ cuộc trò chuyện này",
+		"link_copied": "Đã sao chép liên kết vào bộ nhớ tạm",
+		"share_confirm": "Bạn có chắc chắn muốn chia sẻ cuộc trò chuyện này không? Điều này không thể hoàn tác.",
+		"model_info": "Mô hình",
+		"generated_content_disclaimer": "Nội dung được tạo có thể không chính xác hoặc sai.",
+		"file_upload": {
+			"dropzone": "vùng thả tệp",
+			"send_button": "Gửi tin nhắn"
+		},
+		"introduction": {
+			"current_model": "Mô hình hiện tại",
+			"examples": "Ví dụ",
+			"default_description": "Cung cấp các mô hình trò chuyện AI tốt nhất của cộng đồng cho mọi người."
+		}
+	}
+}

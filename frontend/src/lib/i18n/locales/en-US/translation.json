@@ -1,0 +1,123 @@
+{
+	"settings": {
+		"title": "Application Settings",
+		"latest_deployment": "Latest deployment",
+		"language": "Language",
+		"language_description": "Choose your preferred language",
+		"share_conversations": "Share conversations with model authors",
+		"share_conversations_description": "Sharing your data will help improve the training data and make open models better over time.",
+		"hide_emoji": "Hide emoticons in conversation topics",
+		"hide_emoji_description": "Emoticons are shown in the sidebar by default, enable this to hide them.",
+		"disable_stream": "Disable streaming tokens",
+		"direct_paste": "Paste text directly into chat",
+		"direct_paste_description": "By default, when pasting long text into the chat, we treat it as a plaintext file. Enable this to paste directly into the chat instead.",
+		"share_feedback": "Share your feedback on HuggingChat",
+		"delete_all": "Delete all conversations",
+		"delete_confirm_title": "Are you sure?",
+		"delete_confirm_description": "This action will delete all your conversations. This cannot be undone.",
+		"delete_confirm_button": "Confirm deletion",
+		"close": "Close settings",
+		"models": "Models",
+		"active": "Active",
+		"assistants": "Assistants",
+		"my_assistants": "My Assistants",
+		"create_assistant": "Create new assistant",
+		"other_assistants": "Other Assistants",
+		"browse_assistants": "Browse Assistants",
+		"app_settings": "Application Settings",
+		"model": {
+			"page": "Model page",
+			"dataset": "Dataset page",
+			"website": "Model website",
+			"api_playground": "API Playground",
+			"copy_link": "Copy direct link to model",
+			"new_chat": "New chat",
+			"system_prompt": "System Prompt",
+			"reset": "Reset",
+			"custom_prompt_aria": "Custom system prompt"
+		}
+	},
+	"button": {
+		"continue": "Continue",
+		"delete": "Delete",
+		"upload": "Upload",
+		"cancel": "Cancel",
+		"save": "Save",
+		"create": "Create",
+		"sign_out": "Sign Out",
+		"new_chat": "New Chat"
+	},
+	"menu": {
+		"tools": "Tools",
+		"available_tools": "Available tools",
+		"theme": "Theme",
+		"models": "Models",
+		"assistants": "Assistants",
+		"settings": "Settings",
+		"about_privacy": "About & Privacy",
+		"time_range": {
+			"today": "Today",
+			"this_week": "This week",
+			"this_month": "This month",
+			"older": "Older"
+		}
+	},
+	"announcement": {
+		"new": "New"
+	},
+	"assistant": {
+		"edit_title": "Edit Assistant: {{name}}",
+		"edit_description": "Modifying an existing assistant will propagate the changes to all users.",
+		"create_title": "Create new assistant",
+		"create_description": "Create and share your own AI Assistant. All assistants are",
+		"public_badge": "public",
+		"avatar": "Avatar",
+		"name": "Name",
+		"name_placeholder": "Assistant Name",
+		"description": "Description",
+		"description_placeholder": "It knows everything about python",
+		"model": "Model",
+		"start_messages": "User start messages",
+		"start_message_placeholder": "Start Message {{number}}",
+		"tools_section": "Tools",
+		"tools_experimental": "Experimental",
+		"tools_description": "Choose up to 3 community tools that will be used with this assistant.",
+		"internet_access": "Internet access",
+		"give_feedback": "Give feedback",
+		"internet_default": "Default",
+		"internet_default_description": "Assistant will not use internet to do information retrieval and will respond faster. Recommended for most Assistants.",
+		"web_search": "Web search",
+		"web_search_description": "Assistant will do a web search on each user request to find information.",
+		"domains_search": "Domains search",
+		"domains_placeholder": "wikipedia.org,bbc.com",
+		"specific_links": "Specific Links",
+		"specific_links_description": "Specify a maximum of 10 direct URLs that the Assistant will access. HTML & Plain Text only, separated by commas",
+		"specific_links_placeholder": "https://raw.githubusercontent.com/huggingface/chat-ui/main/README.md",
+		"instructions": "Instructions (System Prompt)",
+		"instructions_placeholder": "You'll act as...",
+		"dynamic_prompt": "Dynamic Prompt",
+		"dynamic_prompt_description": "Allow the use of template variables {{get=https://example.com/path}} to insert dynamic content into your prompt by making GET requests to specified URLs on each inference. You can also send the user's message as the body of a POST request, using {{post=https://example.com/path}}. Use {{today}} to include the current date.",
+		"template_variables": "template variable",
+		"template_variables_plural": "template variables",
+		"template_variables_description": "Will perform a GET or POST request and inject the response into the prompt. Works better with plain text, csv or json content."
+	},
+	"chat": {
+		"ask_anything": "Ask anything",
+		"read_only": "This conversation is read-only.",
+		"error_message": "Sorry, something went wrong. Please try again.",
+		"share_conversation": "Share this conversation",
+		"link_copied": "Link copied to clipboard",
+		"share_confirm": "Are you sure you want to share this conversation? This cannot be undone.",
+		"model_info": "Model",
+		"generated_content_disclaimer": "Generated content may be inaccurate or false.",
+		"file_upload": {
+			"dropzone": "file dropzone",
+			"send_button": "Send message"
+		},
+		"introduction": {
+			"current_model": "Current Model",
+			"examples": "Examples",
+			"default_description": "Making the community's best AI chat models available to everyone."
+		}
+	}
+}

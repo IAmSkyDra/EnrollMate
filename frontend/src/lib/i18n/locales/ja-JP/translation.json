@@ -1,0 +1,123 @@
+{
+	"settings": {
+		"title": "アプリケーション設定",
+		"latest_deployment": "最新のデプロイ",
+		"language": "言語",
+		"language_description": "希望する言語を選択してください",
+		"share_conversations": "会話をモデル作者と共有する",
+		"share_conversations_description": "データを共有することで、トレーニングデータの改善やオープンモデルの向上に貢献できます。",
+		"hide_emoji": "会話トピックに絵文字を表示しない",
+		"hide_emoji_description": "デフォルトではサイドバーに絵文字が表示されます。これを有効にすると非表示になります。",
+		"disable_stream": "トークンストリーミングを無効化する",
+		"direct_paste": "テキストを直接チャットに貼り付ける",
+		"direct_paste_description": "デフォルトでは、長いテキストをチャットに貼り付けるとプレーンテキストファイルとして扱われます。これを有効にすると直接チャットに貼り付けられるようになります。",
+		"share_feedback": "HuggingChatにフィードバックを共有する",
+		"delete_all": "すべての会話を削除する",
+		"delete_confirm_title": "本当によろしいですか？",
+		"delete_confirm_description": "この操作により、すべての会話が削除されます。この操作は元に戻せません。",
+		"delete_confirm_button": "削除を確定する",
+		"close": "設定を閉じる",
+		"models": "モデル",
+		"active": "アクティブ",
+		"assistants": "アシスタント",
+		"my_assistants": "私のアシスタント",
+		"create_assistant": "新しいアシスタントを作成",
+		"other_assistants": "その他のアシスタント",
+		"browse_assistants": "アシスタントを閲覧",
+		"app_settings": "アプリケーション設定",
+		"model": {
+			"page": "モデルページ",
+			"dataset": "データセットページ",
+			"website": "モデルウェブサイト",
+			"api_playground": "APIプレイグラウンド",
+			"copy_link": "モデルへの直接リンクをコピー",
+			"new_chat": "新しいチャット",
+			"system_prompt": "システムプロンプト",
+			"reset": "リセット",
+			"custom_prompt_aria": "カスタムシステムプロンプト"
+		}
+	},
+	"button": {
+		"continue": "続ける",
+		"delete": "削除",
+		"upload": "アップロード",
+		"cancel": "キャンセル",
+		"save": "保存",
+		"create": "作成",
+		"sign_out": "サインアウト",
+		"new_chat": "新しいチャット"
+	},
+	"menu": {
+		"tools": "ツール",
+		"available_tools": "利用可能なツール",
+		"theme": "テーマ",
+		"models": "モデル",
+		"assistants": "アシスタント",
+		"settings": "設定",
+		"about_privacy": "情報 & プライバシー",
+		"time_range": {
+			"today": "今日",
+			"this_week": "今週",
+			"this_month": "今月",
+			"older": "以前"
+		}
+	},
+	"announcement": {
+		"new": "新規"
+	},
+	"assistant": {
+		"edit_title": "アシスタントを編集: {{name}}",
+		"edit_description": "既存のアシスタントを変更すると、すべてのユーザーにその変更が反映されます。",
+		"create_title": "新しいアシスタントを作成",
+		"create_description": "独自のAIアシスタントを作成して共有します。すべてのアシスタントは",
+		"public_badge": "公開",
+		"avatar": "アバター",
+		"name": "名前",
+		"name_placeholder": "アシスタント名",
+		"description": "説明",
+		"description_placeholder": "Pythonに関して何でも知っている",
+		"model": "モデル",
+		"start_messages": "ユーザー開始メッセージ",
+		"start_message_placeholder": "開始メッセージ {{number}}",
+		"tools_section": "ツール",
+		"tools_experimental": "実験的",
+		"tools_description": "コミュニティツールの中から最大3つを選択してこのアシスタントで使用します。",
+		"internet_access": "インターネットアクセス",
+		"give_feedback": "フィードバックを送る",
+		"internet_default": "デフォルト",
+		"internet_default_description": "情報検索のためにインターネットを使用せず、高速に応答します。ほとんどのアシスタントに推奨されます。",
+		"web_search": "ウェブ検索",
+		"web_search_description": "各ユーザーリクエストでウェブ検索を行い、情報を検索します。",
+		"domains_search": "ドメイン検索",
+		"domains_placeholder": "wikipedia.org,bbc.com",
+		"specific_links": "特定リンク",
+		"specific_links_description": "アシスタントがアクセスする最大10個の直接的なURLを指定します。HTML & プレーンテキストのみを使用、コンマで区切ります。",
+		"specific_links_placeholder": "https://raw.githubusercontent.com/huggingface/chat-ui/main/README.md",
+		"instructions": "指示（システムプロンプト）",
+		"instructions_placeholder": "あなたは...として振る舞います",
+		"dynamic_prompt": "動的プロンプト",
+		"dynamic_prompt_description": "テンプレート変数 {{get=https://example.com/path}} を使用することで、指定されたURLにGETリクエストを行い、その内容をプロンプトに挿入することができます。POSTリクエストを使用してユーザーメッセージを本文として送信することもできます（{{post=https://example.com/path}}）。現在の日付を含めるには {{today}} を使用します。",
+		"template_variables": "テンプレート変数",
+		"template_variables_plural": "テンプレート変数",
+		"template_variables_description": "GETまたはPOSTリクエストを実行し、その応答をプロンプトに挿入します。プレーンテキスト、CSV、JSONコンテンツでの使用をお勧めします。"
+	},
+	"chat": {
+		"ask_anything": "何でも聞いてください",
+		"read_only": "この会話は読み取り専用です。",
+		"error_message": "申し訳ありません、問題が発生しました。もう一度お試しください。",
+		"share_conversation": "この会話を共有する",
+		"link_copied": "リンクがクリップボードにコピーされました",
+		"share_confirm": "この会話を共有してもよろしいですか？この操作は取り消せません。",
+		"model_info": "モデル",
+		"generated_content_disclaimer": "生成されたコンテンツは、不正確または虚偽の情報を含む場合があります。",
+		"file_upload": {
+			"dropzone": "ファイルドラップゾーン",
+			"send_button": "メッセージを送信"
+		},
+		"introduction": {
+			"current_model": "現在のモデル",
+			"examples": "例",
+			"default_description": "コミュニティの最高のAIチャットモデルをすべての人が利用できるようにします。"
+		}
+	}
+}

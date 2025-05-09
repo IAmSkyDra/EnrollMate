@@ -1,4 +1,5 @@
 <script lang="ts">
+	import i18n from "$lib/i18n";
 	import { onMount } from "svelte";
 	import { base } from "$app/paths";
 	import { afterNavigate, goto } from "$app/navigation";
@@ -12,13 +13,18 @@
 	import UserIcon from "~icons/carbon/user";
 	import type { LayoutData } from "../$types";
 
-	export let data: LayoutData;
+	interface Props {
+		data: LayoutData;
+		children?: import("svelte").Snippet;
+	}
 
-	let previousPage: string = base;
-	let assistantsSection: HTMLHeadingElement;
+	let { data, children }: Props = $props();
+
+	let previousPage: string = $state(base);
+	let assistantsSection: HTMLHeadingElement | undefined = $state();
 
 	onMount(() => {
-		if ($page.params?.assistantId) {
+		if ($page.params?.assistantId && assistantsSection) {
 			assistantsSection.scrollIntoView();
 		}
 	});
@@ -36,11 +42,11 @@
 	class="grid h-full w-full grid-cols-1 grid-rows-[auto,1fr] content-start gap-x-4 overflow-hidden p-4 md:grid-cols-3 md:grid-rows-[auto,1fr] md:p-8"
 >
 	<div class="col-span-1 mb-4 flex items-center justify-between md:col-span-3">
-		<h2 class="text-xl font-bold">Settings</h2>
+		<h2 class="text-xl font-bold">{$i18n.t('settings.title')}</h2>
 		<button
 			class="btn rounded-lg"
-			aria-label="Close settings"
-			on:click={() => {
+			aria-label={$i18n.t('settings.close')}
+			onclick={() => {
 				goto(previousPage);
 			}}
 		>
@@ -50,7 +56,7 @@
 	<div
 		class="col-span-1 flex flex-col overflow-y-auto whitespace-nowrap max-md:-mx-4 max-md:h-[245px] max-md:border max-md:border-b-2 md:pr-6"
 	>
-		<h3 class="pb-3 pl-3 pt-2 text-[.8rem] text-gray-800 sm:pl-1">Models</h3>
+		<h3 class="pb-3 pl-3 pt-2 text-[.8rem] text-gray-800 sm:pl-1">{$i18n.t('settings.models')}</h3>
 
 		{#each data.models.filter((el) => !el.unlisted) as model}
 			<a
@@ -69,7 +75,7 @@
 					<div
 						class="rounded-lg bg-black px-2 py-1.5 text-xs font-semibold leading-none text-white"
 					>
-						Active
+						{$i18n.t('settings.active')}
 					</div>
 				{/if}
 			</a>
@@ -77,10 +83,10 @@
 		<!-- if its huggingchat, the number of assistants owned by the user must be non-zero to show the UI -->
 		{#if data.enableAssistants}
 			<h3 bind:this={assistantsSection} class="pl-3 pt-5 text-[.8rem] text-gray-800 sm:pl-1">
-				Assistants
+				{$i18n.t('settings.assistants')}
 			</h3>
 			<!-- My Assistants -->
-			<h4 class="py-2 pl-5 text-[.7rem] text-gray-600 sm:pl-1">My Assistants</h4>
+			<h4 class="py-2 pl-5 text-[.7rem] text-gray-600 sm:pl-1">{$i18n.t('settings.my_assistants')}</h4>
 
 			{#each data.assistants.filter((assistant) => assistant.createdByMe) as assistant}
 				<a
@@ -118,12 +124,12 @@
 				{$page.url.pathname === `${base}/settings/assistants/new` ? '!bg-gray-100 !text-gray-800' : ''}"
 				>
 					<CarbonAdd />
-					<div class="truncate">Create new assistant</div>
+					<div class="truncate">{$i18n.t('settings.create_assistant')}</div>
 				</a>
 			{/if}
 
 			<!-- Other Assistants -->
-			<h4 class="pl-3 pt-3 text-[.7rem] text-gray-600 sm:pl-1">Other Assistants</h4>
+			<h4 class="pl-3 pt-3 text-[.7rem] text-gray-600 sm:pl-1">{$i18n.t('settings.other_assistants')}</h4>
 
 			{#each data.assistants.filter((assistant) => !assistant.createdByMe) as assistant}
 				<a
@@ -158,23 +164,23 @@
 				href="{base}/assistants"
 				class="group flex h-10 flex-none items-center gap-2 pl-3 pr-2 text-sm text-gray-500 hover:bg-gray-100 md:rounded-xl"
 				><CarbonArrowUpRight class="mr-1.5 shrink-0 text-xs " />
-				<div class="truncate">Browse Assistants</div>
+				<div class="truncate">{$i18n.t('settings.browse_assistants')}</div>
 			</a>
 		{/if}
 
-		<div class="my-2 mt-auto w-full border-b border-gray-200" />
+		<div class="my-2 mt-auto w-full border-b border-gray-200"></div>
 		<a
 			href="{base}/settings"
 			class="group flex h-10 flex-none items-center gap-2 pl-3 pr-2 text-sm text-gray-500 hover:bg-gray-100 max-md:order-first md:rounded-xl
 				{$page.url.pathname === `${base}/settings` ? '!bg-gray-100 !text-gray-800' : ''}"
 		>
 			<UserIcon class="text-sm" />
-			Application Settings
+			{$i18n.t('settings.app_settings')}
 		</a>
 	</div>
 	<div
 		class="col-span-1 w-full overflow-y-auto overflow-x-clip px-1 max-md:pt-4 md:col-span-2 md:row-span-2"
 	>
-		<slot />
+		{@render children?.()}
 	</div>
 </div>

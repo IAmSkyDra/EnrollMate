@@ -18,7 +18,7 @@ ENV HOME=/home/user \
 WORKDIR /app
 
 # add a .env.local if the user doesn't bind a volume to it
-#RUN touch /app/.env.local
+RUN touch /app/.env.local
 
 
 RUN npm i --no-package-lock --no-save playwright@1.47.0
@@ -30,7 +30,6 @@ RUN chown -R 1000:1000 /home/user/.npm
 USER user
 
 COPY --chown=1000 .env /app/.env
-COPY --chown=1000 .env.local /app/.env.local
 COPY --chown=1000 entrypoint.sh /app/entrypoint.sh
 COPY --chown=1000 gcp-*.json /app/
 COPY --chown=1000 package.json /app/package.json

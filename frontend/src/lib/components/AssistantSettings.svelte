@@ -3,6 +3,7 @@
 	import type { Model } from "$lib/types/Model";
 	import type { Assistant } from "$lib/types/Assistant";
 
+	import i18n from "$lib/i18n";
 	import { onMount } from "svelte";
 	import { applyAction, enhance } from "$app/forms";
 	import { page } from "$app/stores";
@@ -31,18 +32,22 @@
 
 	type AssistantFront = Omit<Assistant, "_id" | "createdById"> & { _id: string };
 
-	export let form: ActionData;
-	export let assistant: AssistantFront | undefined = undefined;
-	export let models: Model[] = [];
+	interface Props {
+		form: ActionData;
+		assistant?: AssistantFront | undefined;
+		models?: Model[];
+	}
 
-	let files: FileList | null = null;
+	let { form = $bindable(), assistant = undefined, models = [] }: Props = $props();
+
+	let files: FileList | null = $state(null);
 	const settings = useSettingsStore();
-	let modelId = "";
-	let systemPrompt = assistant?.preprompt ?? "";
-	let dynamicPrompt = assistant?.dynamicPrompt ?? false;
-	let showModelSettings = Object.values(assistant?.generateSettings ?? {}).some((v) => !!v);
+	let modelId = $state("");
+	let systemPrompt = $state(assistant?.preprompt ?? "");
+	let dynamicPrompt = $state(assistant?.dynamicPrompt ?? false);
+	let showModelSettings = $state(Object.values(assistant?.generateSettings ?? {}).some((v) => !!v));
 
-	let compress: typeof readAndCompressImage | null = null;
+	let compress: typeof readAndCompressImage | null = $state(null);
 
 	onMount(async () => {
 		const module = await import("browser-image-resizer");
@@ -51,10 +56,10 @@
 		modelId = findCurrentModel(models, assistant ? assistant.modelId : $settings.activeModel).id;
 	});
 
-	let inputMessage1 = assistant?.exampleInputs[0] ?? "";
-	let inputMessage2 = assistant?.exampleInputs[1] ?? "";
-	let inputMessage3 = assistant?.exampleInputs[2] ?? "";
-	let inputMessage4 = assistant?.exampleInputs[3] ?? "";
+	let inputMessage1 = $state(assistant?.exampleInputs[0] ?? "");
+	let inputMessage2 = $state(assistant?.exampleInputs[1] ?? "");
+	let inputMessage3 = $state(assistant?.exampleInputs[2] ?? "");
+	let inputMessage4 = $state(assistant?.exampleInputs[3] ?? "");
 
 	function resetErrors() {
 		if (form) {
@@ -83,23 +88,25 @@
 		return returnForm?.errors.find((error) => error.field === field)?.message ?? "";
 	}
 
-	let deleteExistingAvatar = false;
+	let deleteExistingAvatar = $state(false);
 
-	let loading = false;
+	let loading = $state(false);
 
-	let ragMode: false | "links" | "domains" | "all" = assistant?.rag?.allowAllDomains
-		? "all"
-		: assistant?.rag?.allowedLinks?.length ?? 0 > 0
-		? "links"
-		: (assistant?.rag?.allowedDomains?.length ?? 0) > 0
-		? "domains"
-		: false;
+	let ragMode: false | "links" | "domains" | "all" = $state(
+		assistant?.rag?.allowAllDomains
+			? "all"
+			: (assistant?.rag?.allowedLinks?.length ?? 0 > 0)
+				? "links"
+				: (assistant?.rag?.allowedDomains?.length ?? 0) > 0
+					? "domains"
+					: false
+	);
 
-	let tools = assistant?.tools ?? [];
+	let tools = $state(assistant?.tools ?? []);
 	const regex = /{{\s?(get|post|url|today)(=.*?)?\s?}}/g;
 
-	$: templateVariables = [...systemPrompt.matchAll(regex)];
-	$: selectedModel = models.find((m) => m.id === modelId);
+	let templateVariables = $derived([...systemPrompt.matchAll(regex)]);
+	let selectedModel = $derived(models.find((m) => m.id === modelId));
 </script>
 
 <form
@@ -160,16 +167,16 @@
 >
 	{#if assistant}
 		<h2 class="text-xl font-semibold">
-			Edit Assistant: {assistant?.name ?? "assistant"}
+			{$i18n.t('assistant.edit_title', { name: assistant?.name ?? "assistant" })}
 		</h2>
 		<p class="mb-6 text-sm text-gray-500">
-			Modifying an existing assistant will propagate the changes to all users.
+			{$i18n.t('assistant.edit_description')}
 		</p>
 	{:else}
-		<h2 class="text-xl font-semibold">Create new assistant</h2>
+		<h2 class="text-xl font-semibold">{$i18n.t('assistant.create_title')}</h2>
 		<p class="mb-6 text-sm text-gray-500">
-			Create and share your own AI Assistant. All assistants are <span
-				class="rounded-full border px-2 py-0.5 leading-none">public</span
+			{$i18n.t('assistant.create_description')} <span
+				class="rounded-full border px-2 py-0.5 leading-none">{$i18n.t('assistant.public_badge')}</span
 			>
 		</p>
 	{/if}
@@ -177,14 +184,14 @@
 	<div class="grid h-full w-full flex-1 grid-cols-2 gap-6 text-sm max-sm:grid-cols-1">
 		<div class="col-span-1 flex flex-col gap-4">
 			<div>
-				<div class="mb-1 block pb-2 text-sm font-semibold">Avatar</div>
+				<div class="mb-1 block pb-2 text-sm font-semibold">{$i18n.t('assistant.avatar')}</div>
 				<input
 					type="file"
 					accept="image/*"
 					name="avatar"
 					id="avatar"
 					class="hidden"
-					on:change={onFilesChange}
+					onchange={onFilesChange}
 				/>
 
 				{#if (files && files[0]) || (assistant?.avatar && !deleteExistingAvatar)}
@@ -192,13 +199,13 @@
 						{#if files && files[0]}
 							<img
 								src={URL.createObjectURL(files[0])}
-								alt="avatar"
+								alt={$i18n.t('assistant.avatar')}
 								class="crop mx-auto h-12 w-12 cursor-pointer rounded-full object-cover"
 							/>
 						{:else if assistant?.avatar}
 							<img
 								src="{base}/settings/assistants/{assistant._id}/avatar.jpg?hash={assistant.avatar}"
-								alt="avatar"
+								alt={$i18n.t('assistant.avatar')}
 								class="crop mx-auto h-12 w-12 cursor-pointer rounded-full object-cover"
 							/>
 						{/if}
@@ -213,13 +220,15 @@
 					<div class="mx-auto w-max pt-1">
 						<button
 							type="button"
-							on:click|stopPropagation|preventDefault={() => {
+							onclick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
 								files = null;
 								deleteExistingAvatar = true;
 							}}
 							class="mx-auto w-max text-center text-xs text-gray-600 hover:underline"
 						>
-							Delete
+							{$i18n.t('button.delete')}
 						</button>
 					</div>
 				{:else}
@@ -228,7 +237,7 @@
 							for="avatar"
 							class="btn flex h-8 rounded-lg border bg-white px-3 py-1 text-gray-500 shadow-sm transition-all hover:bg-gray-100"
 						>
-							<CarbonUpload class="mr-2 text-xs " /> Upload
+							<CarbonUpload class="mr-2 text-xs " /> {$i18n.t('button.upload')}
 						</label>
 					</div>
 				{/if}
@@ -236,29 +245,29 @@
 			</div>
 
 			<label>
-				<div class="mb-1 font-semibold">Name</div>
+				<div class="mb-1 font-semibold">{$i18n.t('assistant.name')}</div>
 				<input
 					name="name"
 					class="w-full rounded-lg border-2 border-gray-200 bg-gray-100 p-2"
-					placeholder="Assistant Name"
+					placeholder={$i18n.t('assistant.name_placeholder')}
 					value={assistant?.name ?? ""}
 				/>
 				<p class="text-xs text-red-500">{getError("name", form)}</p>
 			</label>
 
 			<label>
-				<div class="mb-1 font-semibold">Description</div>
+				<div class="mb-1 font-semibold">{$i18n.t('assistant.description')}</div>
 				<textarea
 					name="description"
 					class="h-15 w-full rounded-lg border-2 border-gray-200 bg-gray-100 p-2"
-					placeholder="It knows everything about python"
+					placeholder={$i18n.t('assistant.description_placeholder')}
 					value={assistant?.description ?? ""}
-				/>
+				></textarea>
 				<p class="text-xs text-red-500">{getError("description", form)}</p>
 			</label>
 
 			<label>
-				<div class="mb-1 font-semibold">Model</div>
+				<div class="mb-1 font-semibold">{$i18n.t('assistant.model')}</div>
 				<div class="flex gap-2">
 					<select
 						name="modelId"
@@ -268,14 +277,14 @@
 						{#each models.filter((model) => !model.unlisted) as model}
 							<option value={model.id}>{model.displayName}</option>
 						{/each}
-						<p class="text-xs text-red-500">{getError("modelId", form)}</p>
 					</select>
+					<p class="text-xs text-red-500">{getError("modelId", form)}</p>
 					<button
 						type="button"
 						class="flex aspect-square items-center gap-2 whitespace-nowrap rounded-lg border px-3 {showModelSettings
 							? 'border-blue-500/20 bg-blue-50 text-blue-600'
 							: ''}"
-						on:click={() => (showModelSettings = !showModelSettings)}
+						onclick={() => (showModelSettings = !showModelSettings)}
 						><CarbonSettingsAdjust class="text-xs" /></button
 					>
 				</div>
@@ -379,30 +388,30 @@
 			</label>
 
 			<label>
-				<div class="mb-1 font-semibold">User start messages</div>
+				<div class="mb-1 font-semibold">{$i18n.t('assistant.start_messages')}</div>
 				<div class="grid gap-1.5 text-sm md:grid-cols-2">
 					<input
 						name="exampleInput1"
-						placeholder="Start Message 1"
+						placeholder={$i18n.t('assistant.start_message_placeholder', { number: 1 })}
 						bind:value={inputMessage1}
 						class="w-full rounded-lg border-2 border-gray-200 bg-gray-100 p-2"
 					/>
 					<input
 						name="exampleInput2"
-						placeholder="Start Message 2"
+						placeholder={$i18n.t('assistant.start_message_placeholder', { number: 2 })}
 						bind:value={inputMessage2}
 						class="w-full rounded-lg border-2 border-gray-200 bg-gray-100 p-2"
 					/>
 
 					<input
 						name="exampleInput3"
-						placeholder="Start Message 3"
+						placeholder={$i18n.t('assistant.start_message_placeholder', { number: 3 })}
 						bind:value={inputMessage3}
 						class="w-full rounded-lg border-2 border-gray-200 bg-gray-100 p-2"
 					/>
 					<input
 						name="exampleInput4"
-						placeholder="Start Message 4"
+						placeholder={$i18n.t('assistant.start_message_placeholder', { number: 4 })}
 						bind:value={inputMessage4}
 						class="w-full rounded-lg border-2 border-gray-200 bg-gray-100 p-2"
 					/>
@@ -412,14 +421,14 @@
 			{#if selectedModel?.tools}
 				<div>
 					<span class="text-smd font-semibold"
-						>Tools
+						>{$i18n.t('assistant.tools_section')}
 						<CarbonTools class="inline text-xs text-purple-600" />
 						<span class="ml-1 rounded bg-gray-100 px-1 py-0.5 text-xxs font-normal text-gray-600"
-							>Experimental</span
+							>{$i18n.t('assistant.tools_experimental')}</span
 						>
 					</span>
 					<p class="text-xs text-gray-500">
-						Choose up to 3 community tools that will be used with this assistant.
+						{$i18n.t('assistant.tools_description')}
 					</p>
 				</div>
 				<AssistantToolPicker bind:toolIds={tools} />
@@ -427,7 +436,7 @@
 			{#if $page.data.enableAssistantsRAG}
 				<div class="flex flex-col flex-nowrap pb-4">
 					<span class="mt-2 text-smd font-semibold"
-						>Internet access
+						>{$i18n.t('assistant.internet_access')}
 						<IconInternet classNames="inline text-sm text-blue-600" />
 
 						{#if isHuggingChat}
@@ -435,7 +444,7 @@
 								href="https://huggingface.co/spaces/huggingchat/chat-ui/discussions/385"
 								target="_blank"
 								class="ml-0.5 rounded bg-gray-100 px-1 py-0.5 text-xxs font-normal text-gray-700 underline decoration-gray-400"
-								>Give feedback</a
+								>{$i18n.t('assistant.give_feedback')}</a
 							>
 						{/if}
 					</span>
@@ -443,16 +452,15 @@
 					<label class="mt-1">
 						<input
 							checked={!ragMode}
-							on:change={() => (ragMode = false)}
+							onchange={() => (ragMode = false)}
 							type="radio"
 							name="ragMode"
 							value={false}
 						/>
-						<span class="my-2 text-sm" class:font-semibold={!ragMode}> Default </span>
+						<span class="my-2 text-sm" class:font-semibold={!ragMode}> {$i18n.t('assistant.internet_default')} </span>
 						{#if !ragMode}
 							<span class="block text-xs text-gray-500">
-								Assistant will not use internet to do information retrieval and will respond faster.
-								Recommended for most Assistants.
+								{$i18n.t('assistant.internet_default_description')}
 							</span>
 						{/if}
 					</label>
@@ -460,15 +468,15 @@
 					<label class="mt-1">
 						<input
 							checked={ragMode === "all"}
-							on:change={() => (ragMode = "all")}
+							onchange={() => (ragMode = "all")}
 							type="radio"
 							name="ragMode"
 							value={"all"}
 						/>
-						<span class="my-2 text-sm" class:font-semibold={ragMode === "all"}> Web search </span>
+						<span class="my-2 text-sm" class:font-semibold={ragMode === "all"}> {$i18n.t('assistant.web_search')} </span>
 						{#if ragMode === "all"}
 							<span class="block text-xs text-gray-500">
-								Assistant will do a web search on each user request to find information.
+								{$i18n.t('assistant.web_search_description')}
 							</span>
 						{/if}
 					</label>
@@ -476,24 +484,24 @@
 					<label class="mt-1">
 						<input
 							checked={ragMode === "domains"}
-							on:change={() => (ragMode = "domains")}
+							onchange={() => (ragMode = "domains")}
 							type="radio"
 							name="ragMode"
 							value={false}
 						/>
 						<span class="my-2 text-sm" class:font-semibold={ragMode === "domains"}>
-							Domains search
+							{$i18n.t('assistant.domains_search')}
 						</span>
 					</label>
 					{#if ragMode === "domains"}
 						<span class="mb-2 text-xs text-gray-500">
-							Specify domains and URLs that the application can search, separated by commas.
+							{$i18n.t('assistant.domains_description')}
 						</span>
 
 						<input
 							name="ragDomainList"
 							class="w-full rounded-lg border-2 border-gray-200 bg-gray-100 p-2"
-							placeholder="wikipedia.org,bbc.com"
+							placeholder={$i18n.t('assistant.domains_placeholder')}
 							value={assistant?.rag?.allowedDomains?.join(",") ?? ""}
 						/>
 						<p class="text-xs text-red-500">{getError("ragDomainList", form)}</p>
@@ -502,24 +510,23 @@
 					<label class="mt-1">
 						<input
 							checked={ragMode === "links"}
-							on:change={() => (ragMode = "links")}
+							onchange={() => (ragMode = "links")}
 							type="radio"
 							name="ragMode"
 							value={false}
 						/>
 						<span class="my-2 text-sm" class:font-semibold={ragMode === "links"}>
-							Specific Links
+							{$i18n.t('assistant.specific_links')}
 						</span>
 					</label>
 					{#if ragMode === "links"}
 						<span class="mb-2 text-xs text-gray-500">
-							Specify a maximum of 10 direct URLs that the Assistant will access. HTML & Plain Text
-							only, separated by commas
+							{$i18n.t('assistant.specific_links_description')}
 						</span>
 						<input
 							name="ragLinkList"
 							class="w-full rounded-lg border-2 border-gray-200 bg-gray-100 p-2"
-							placeholder="https://raw.githubusercontent.com/huggingface/chat-ui/main/README.md"
+							placeholder={$i18n.t('assistant.specific_links_placeholder')}
 							value={assistant?.rag?.allowedLinks.join(",") ?? ""}
 						/>
 						<p class="text-xs text-red-500">{getError("ragLinkList", form)}</p>
@@ -530,20 +537,19 @@
 
 		<div class="relative col-span-1 flex h-full flex-col">
 			<div class="mb-1 flex justify-between text-sm">
-				<span class="block font-semibold"> Instructions (System Prompt) </span>
+				<span class="block font-semibold"> {$i18n.t('assistant.instructions')} </span>
 				{#if dynamicPrompt && templateVariables.length}
 					<div class="relative">
 						<button
 							type="button"
 							class="peer rounded bg-blue-500/20 px-1 text-xs text-blue-600 focus:bg-blue-500/30 focus:text-blue-800 sm:text-sm"
 						>
-							{templateVariables.length} template variable{templateVariables.length > 1 ? "s" : ""}
+							{templateVariables.length} {$i18n.t(templateVariables.length > 1 ? 'assistant.template_variables_plural' : 'assistant.template_variables')}
 						</button>
 						<div
 							class="invisible absolute right-0 top-6 z-10 rounded-lg border bg-white p-2 text-xs shadow-lg peer-focus:visible hover:visible sm:w-96"
 						>
-							Will perform a GET or POST request and inject the response into the prompt. Works
-							better with plain text, csv or json content.
+							{$i18n.t('assistant.template_variables_description')}
 							{#each templateVariables as match}
 								<div>
 									<a
@@ -561,12 +567,9 @@
 			</div>
 			<label class="pb-2 text-sm has-[:checked]:font-semibold">
 				<input type="checkbox" name="dynamicPrompt" bind:checked={dynamicPrompt} />
-				Dynamic Prompt
+				{$i18n.t('assistant.dynamic_prompt')}
 				<p class="mb-2 text-xs font-normal text-gray-500">
-					Allow the use of template variables {"{{get=https://example.com/path}}"}
-					to insert dynamic content into your prompt by making GET requests to specified URLs on each
-					inference. You can also send the user's message as the body of a POST request, using {"{{post=https://example.com/path}}"}.
-					Use {"{{today}}"} to include the current date.
+					{$i18n.t('assistant.dynamic_prompt_description')}
 				</p>
 			</label>
 
@@ -574,9 +577,9 @@
 				<textarea
 					name="preprompt"
 					class="min-h-[8lh] flex-1 rounded-lg border-2 border-gray-200 bg-gray-100 p-2 text-sm"
-					placeholder="You'll act as..."
+					placeholder={$i18n.t('assistant.instructions_placeholder')}
 					bind:value={systemPrompt}
-				/>
+				></textarea>
 				{#if modelId}
 					{@const model = models.find((_model) => _model.id === modelId)}
 					{#if model?.tokenizer && systemPrompt}
@@ -596,7 +599,7 @@
 					href={assistant ? `${base}/settings/assistants/${assistant?._id}` : `${base}/settings`}
 					class="flex items-center justify-center rounded-full bg-gray-200 px-5 py-2 font-semibold text-gray-600"
 				>
-					Cancel
+					{$i18n.t('button.cancel')}
 				</a>
 				<button
 					type="submit"
@@ -607,7 +610,7 @@
 					class:text-gray-600={loading}
 					class:text-white={!loading}
 				>
-					{assistant ? "Save" : "Create"}
+					{assistant ? $i18n.t('button.save') : $i18n.t('button.create')}
 				</button>
 			</div>
 		</div>
