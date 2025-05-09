@@ -1,4 +1,4 @@
-# TVTS Chatbot
+# EnrollMate 
 
 ## Giới thiệu
 Chatbot này là một giải pháp toàn diện dành cho các trường đại học tại Việt Nam, nhằm nâng cao hiệu quả tư vấn tuyển sinh hiện có và mở rộng quy mô tiếp cận. Chatbot có khả năng trả lời các câu hỏi thường gặp, tìm kiếm thông tin liên quan trong các tài liệu do trường cung cấp, và phản hồi như một trợ lý chuyên nghiệp đối với các câu hỏi không liên quan đến tuyển sinh.
