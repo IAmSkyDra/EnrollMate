@@ -31,9 +31,7 @@ Chạy lệnh sau để thiết lập cơ sở dữ liệu Mongodb để lưu l�
 ```
 docker run -d --name mongodb -p 27017:27017 mongo:latest
 ```
-## Hướng dẫn thiết lập nhanh
-- Chạy file setup.sh đối với Linux hoặc setup.bat đối với Windows để cài đặt các gói cần thiết.
-- Chạy file run.sh đối với Linux hoặc run.bat đối với Windows để khởi động ứng dụng.
+
 ## Cài đặt các gói
 ### Frontend
 Trước tiên, cài các gói cần thiết với `npm`
@@ -349,3 +347,5 @@ npm run dev
 ```
 API sẽ có thể truy cập tại `http://<APP_HOST>:<APP_PORT>` (ví dụ: `http://localhost:8000` theo mặc định).
 Bạn có thể truy cập tài liệu OpenAPI tại `http://localhost:8000/docs`.
+
+Hoặc có thể Chạy file run.sh đối với Linux hoặc run.bat đối với Windows để khởi động ứng dụng.
